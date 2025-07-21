@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  pcb-detector:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./best.pt:/app/best.pt:ro
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    networks:
+      - pcb-network
+
+networks:
+  pcb-network:
+    driver: bridge 
