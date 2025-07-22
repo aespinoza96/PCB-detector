@@ -28,7 +28,7 @@ def process_llm(prediction_json: dict) -> str:
     )
 
     user_prompt = (
-        "Defectos detectados en la PCB (formato JSON):\n"
+        "PCB Defects detected (JSON format):\n"
         f"{json.dumps(prediction_json, ensure_ascii=False, indent=2)}\n\n"
         "Classifies each defect by indicating: component reference, defect "
         "type (according to IPC-A-610F), and severity (Class 1, 2, or 3). "
@@ -49,4 +49,4 @@ def process_llm(prediction_json: dict) -> str:
 
     except openai.OpenAIError as exc:
         # You might want richer error handling/logging here
-        return f"⚠️ Error al consultar ChatGPT: {exc}"
+        return f"⚠️ Error while asking ChatGPT: {exc}"
