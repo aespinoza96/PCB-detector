@@ -9,6 +9,7 @@ model = YOLO('app/utils/best.pt')
 def detect_and_annotate(image_file: io.BytesIO) -> Tuple[List[Dict[str, Any]], io.BytesIO]:
     pil_img = Image.open(image_file).convert("RGB")
     img_np = np.array(pil_img)
+    #results = model.predict(source=img_np, save=False, verbose=False, device='mps')
     results = model.predict(source=img_np, save=False, verbose=False)
     det = results[0]
 

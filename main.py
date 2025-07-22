@@ -1,44 +1,40 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import streamlit as st
 from app.utils.detection import detect_and_annotate
-import json
+from app.utils.analysis import process_llm
 
-def process_llm(prediction_json: dict) -> str:
-    """
-    Ask chat GPT to classify the model PCB prediction.
-    """
 
-    promt = (
-        "Eres un experto en calidad y ensamble electrónico, familiarizado con la norma IPC-A-610 (versión F). "
-        "A continuación, recibirás información sobre defectos detectados en una imagen de una PCB: "
-        + json.dumps(prediction_json)
-    )
-
-    # TODO: Process using OpenAPI or Claude Sonnet
-
-    return ''
 
 def main():
     st.title("📸 Defects detection in PCB")
 
     with st.form("upload_form"):
         uploaded_file = st.file_uploader(
-            "Elija una imagen",
+            "Pick a PCB Image",
             type=["png", "jpg", "jpeg"]
         )
-        submitted = st.form_submit_button("Iniciar detección")
+        submitted = st.form_submit_button("Start detection")
 
     if submitted:
         if not uploaded_file:
-            st.warning("❗ No se ha seleccionado ninguna imagen")
+            st.warning("❗ Choose an image")
         else:
             detections, annotated_buf = detect_and_annotate(uploaded_file)
-            st.success(f"✅ Detección completada!")
-            st.image(
-                annotated_buf,
-                caption="Detecciones",
-                use_container_width=True
-            )
-            # Aquí iría la respuesta del LLM estructurada.
-
+            if  detections:
+                with st.spinner("Analyzing PCB defects..."):
+                        print(detections)
+                        llm_answer = process_llm(detections)
+                st.success(f"‼️ Detection completed. PCB problems found!")
+                st.image(
+                    annotated_buf,
+                    caption="Detections",
+                    use_container_width=True
+                )
+                st.markdown("### Details (ChatGPT):")
+                st.markdown(llm_answer)
+            else:
+                st.success(f"✅ Detection. No PCB problems found!")
 if __name__ == "__main__":
     main()
