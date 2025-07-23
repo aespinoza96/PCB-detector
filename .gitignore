@@ -23,8 +23,6 @@ build/
 *.onnx
 
 # Images and test data
-*.png
-*.jpg
 *.jpeg
 *.bmp
 *.tiff
