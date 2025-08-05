@@ -3,7 +3,7 @@ load_dotenv()
 
 import streamlit as st
 from app.utils.detection import detect_and_annotate
-from app.utils.analysis import process_llm
+from app.utils.analysis import analyse_defects_with_rag
 
 
 
@@ -25,7 +25,7 @@ def main():
             if  detections:
                 with st.spinner("Analyzing PCB defects..."):
                         print(detections)
-                        llm_answer = process_llm(detections)
+                        llm_answer = analyse_defects_with_rag(detections)
                 st.success(f"‼️ Detection completed. PCB problems found!")
                 st.image(
                     annotated_buf,
